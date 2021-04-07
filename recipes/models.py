@@ -15,6 +15,9 @@ class Ingredient(models.Model):
         verbose_name = "Ингредиент"
         verbose_name_plural = "Ингредиенты"
 
+    def __str__(self):
+        return self.title
+
 
 class Recipe(models.Model):
     TYPES_OF_MEALS = (
@@ -51,6 +54,9 @@ class Recipe(models.Model):
                                          related_name="recipes",
                                          verbose_name="Ингредиенты")
     image = models.ImageField(upload_to="images/", verbose_name="Фото")
+
+    def __str__(self):
+        return self.title
 
     # def save(self, *args, **kwargs):
     #     self.slug = slugify(self.title)
