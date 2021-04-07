@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'slugify',
     'recipes',
     'users',
+    'api',
     'sorl.thumbnail',
     'django.contrib.admin',
     'django.contrib.auth',

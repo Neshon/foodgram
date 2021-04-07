@@ -4,6 +4,6 @@ from recipes.views import RecipesListView, RecipeDetailView
 
 urlpatterns = [
     path("", RecipesListView.as_view(), name="index"),
-    path("<int:recipe_id>/", RecipeDetailView.as_view(), name="recipe")
+    path("<int:recipe_id>/", RecipeDetailView.as_view(), name="recipe"),
 ]
 
