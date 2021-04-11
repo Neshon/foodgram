@@ -23,18 +23,7 @@ class IngredientsForRecipeAdmin(admin.ModelAdmin):
     list_display = ("recipe", "ingredient", "amount")
 
 
-class FollowAdmin(admin.ModelAdmin):
-    list_display = ('user', 'author')
-    search_fields = ('user', 'author',)
-
-
-class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
-    search_fields = ('user', 'recipe',)
-
-
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(IngredientsForRecipe, IngredientsForRecipeAdmin)
-admin.site.register(Follow)
-admin.site.register(Favorite, FavoriteAdmin)
+

@@ -1,7 +1,10 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView
+from django.urls import reverse
+from django.views.generic import ListView, DetailView, CreateView
 
+from recipes.forms import RecipeForm
 from recipes.models import Recipe
 
 
@@ -21,3 +24,18 @@ class RecipeDetailView(DetailView):
     def get_queryset(self):
         recipe = Recipe.objects.filter(id=self.kwargs['recipe_id'])
         return recipe
+
+
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    model = Recipe
+    form_class = RecipeForm
+    template_name = "new_recipe.html"
+
+    def form_valid(self, form):
+        recipe = form.save(commit=False)
+        recipe.author = self.request.user
+        recipe.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("index")
