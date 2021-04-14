@@ -26,6 +26,16 @@ class FollowRecipesListView(ListView):
             following__user=self.request.user).order_by('-id')
 
 
+class FavoriteRecipesListView(ListView):
+    model = Recipe
+    template_name = 'favorite.html'
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(favorites__user=self.request.user)
+
+
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = "singlePage.html"
