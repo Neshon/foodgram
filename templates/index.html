@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% csrf_token %}
 {% block title %} Все рецепты {% endblock %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'css/index.css' %}">

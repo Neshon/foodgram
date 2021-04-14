@@ -1,11 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 
 from recipes.forms import RecipeForm
-from recipes.models import Recipe
+from recipes.models import Recipe, User
 
 
 class RecipesListView(ListView):
@@ -13,6 +13,17 @@ class RecipesListView(ListView):
     template_name = "index.html"
     paginate_by = 6
     context_object_name = "recipes"
+
+
+class FollowRecipesListView(ListView):
+    model = User
+    template_name = 'myFollow.html'
+    paginate_by = 6
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(
+            following__user=self.request.user).order_by('-id')
 
 
 class RecipeDetailView(DetailView):
