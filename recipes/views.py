@@ -36,6 +36,27 @@ class FavoriteRecipesListView(ListView):
         return queryset.filter(favorites__user=self.request.user)
 
 
+class ProfileListView(ListView):
+    model = Recipe
+    template_name = 'authorRecipe.html'
+    paginate_by = 6
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        author = get_object_or_404(User, username=self.kwargs['username'])
+        context.update(
+            {
+                'author': author,
+            }
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        author = get_object_or_404(User, username=self.kwargs['username'])
+        return queryset.filter(author=author)
+
+
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = "singlePage.html"
