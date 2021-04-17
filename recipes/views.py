@@ -71,7 +71,7 @@ class RecipeDetailView(DetailView):
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     form_class = RecipeForm
-    template_name = "new_recipe.html"
+    template_name = "add_recipe.html"
 
     def form_valid(self, form):
         recipe = form.save(commit=False)

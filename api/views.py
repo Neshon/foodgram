@@ -47,4 +47,4 @@ class IngredientViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = (AllowAny,)
     filter_backends = [filters.SearchFilter]
-    search_fields = ['=title', ]
+    search_fields = ['^title', ]
