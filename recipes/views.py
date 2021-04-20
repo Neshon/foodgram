@@ -68,7 +68,7 @@ class RecipeDetailView(DetailView):
         return recipe
 
 
-class RecipeCreateView(LoginRequiredMixin, CreateView):
+class RecipeCreateView(CreateView):
     model = Recipe
     form_class = RecipeForm
     template_name = "add_recipe.html"
@@ -77,6 +77,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         recipe = form.save(commit=False)
         recipe.author = self.request.user
         recipe.save()
+        # form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):

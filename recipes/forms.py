@@ -1,5 +1,7 @@
 from django import forms
-from .models import Recipe
+from django.shortcuts import get_object_or_404
+
+from .models import Recipe, IngredientsForRecipe, Ingredient
 
 
 class RecipeForm(forms.ModelForm):
@@ -11,7 +13,7 @@ class RecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ("title", "tag", "ingredients", "cooking_time", "description", "image")
+        fields = ("title", "tag", "cooking_time", "description", "image")
         labels = {
             "title": "Название рецепта",
             "description": "Описание",
@@ -32,22 +34,29 @@ class RecipeForm(forms.ModelForm):
             raise forms.ValidationError('Отсутствуют ингредиенты')
 
         ingredients_clean = []
-        for name, quantity in ingredients:
-            if int(quantity) < 1:
+        for name, amount in ingredients:
+            if int(amount) < 1:
                 raise forms.ValidationError(
                     f'Исправьте количество ингредиента "{name}"')
             else:
                 ingredients_clean.append({
                     'title': name,
-                    'quantity': quantity,
+                    'amount': amount,
                 })
         return ingredients_clean
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.save()
-        ingredients = self.cleaned_data["ingredients"]
-        self.cleaned_data["ingredients"] = []
-        self.save_m2m()
+        recipe = super().save(commit=False)
+        recipe.save()
 
-        return instance
+        ingredients_in_recipes = []
+        for title, amount in self.ingredients:
+            ingredient = get_object_or_404(Ingredient, title=title)
+            ingredients_in_recipes.append(
+                IngredientsForRecipe(
+                    recipe=recipe, ingredient=ingredient, amount=amount))
+
+        IngredientsForRecipe.objects.filter(recipe=recipe).delete()
+        IngredientsForRecipe.objects.bulk_create(ingredients_in_recipes)
+        self.save_m2m()
+        return recipe
